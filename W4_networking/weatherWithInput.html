@@ -1,0 +1,57 @@
+<!--Fetch astronomy picture of the day from NASA API-->
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>React Weather with input</title>
+  </head>
+  <body>
+    <!-- Root container for react components -->
+    <div id='root'></div>
+ 
+    <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
+
+    <script type="text/babel">
+      // Your scripts goes here
+      const RestWeather = () => {
+        const [city, setCity] = React.useState('');
+        const cityChanged = (event) => {setCity(event.target.value);};
+
+        const [temperature, setTemperature] = React.useState('');
+        const [weather, setWeather] = React.useState('');
+        const [icon, setIcon] = React.useState('');
+        const getWeather = () => {
+            fetch(`http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=b7d56fce2ceadad3b4ed7a12583e32b9`)
+                .then(response => response.json())
+                .then(responseData => {
+                   setCity(responseData.name);
+                   setTemperature((responseData.main.temp - 273).toFixed(1));
+                   setWeather(responseData.weather[0].main);
+                   setIcon(responseData.weather[0].icon);
+                });
+        }
+
+        React.useEffect(() => {
+            
+        },[])
+        return (
+            <div>
+            <input type="text" value={city} onChange={cityChanged}/>
+            <button onClick={getWeather}>Get weather</button> 
+                <h2>City: {city}</h2>
+                <p> Temperature: {temperature} Celsius <br/>
+                    Weather: {weather}
+                </p>
+                <img src={`http://openweathermap.org/img/w/${icon}.png`}/>
+            </div>
+        );
+      };
+
+      
+
+        ReactDOM.render(<RestWeather/>, document.getElementById('root'));
+    </script>
+  </body>
+</html>
